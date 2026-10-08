@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>مبادئ البرمجة الآمنة | أمن البرمجيات — المحاضرة الثالثة</title>
+<meta name="description" content="عرض تفاعلي لمبادئ البرمجة الآمنة - Secure Programming Principles" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css" />
+
+<link rel="stylesheet" href="style.css" />
+<link rel="stylesheet" href="themes.css" />
+</head>
+<body data-theme="dark">
+
+<!-- ============ LOADER ============ -->
+<div id="loader" class="loader">
+  <div class="loader-shield">
+    <svg viewBox="0 0 60 70" width="80" height="90">
+      <defs>
+        <linearGradient id="shg" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#22d3ee"/>
+          <stop offset="100%" stop-color="#6366f1"/>
+        </linearGradient>
+      </defs>
+      <path d="M30 3 L54 12 V33 C54 48 44 60 30 67 C16 60 6 48 6 33 V12 Z"
+            fill="none" stroke="url(#shg)" stroke-width="2.5" stroke-linejoin="round"/>
+      <path class="loader-check" d="M20 33 L28 42 L42 26"
+            fill="none" stroke="url(#shg)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+  <p class="loader-text">جاري تهيئة البيئة الآمنة…</p>
+</div>
+
+<!-- ============ TOP BAR ============ -->
+<header id="topbar" class="topbar">
+  <div class="topbar-left">
+    <div class="brand">
+      <span class="brand-dot"></span>
+      <span class="brand-text">Software&nbsp;Security</span>
+    </div>
+    <span class="brand-sub">المحاضرة الثالثة</span>
+  </div>
+
+  <div class="topbar-center">
+    <div class="topbar-progress">
+      <div class="topbar-progress-fill" id="topProgressFill"></div>
+    </div>
+    <span class="topbar-progress-label" id="topProgressLabel">00 / 29</span>
+  </div>
+
+  <div class="topbar-right">
+    <button class="icon-btn" id="btnTheme" title="تبديل المظهر (T)" aria-label="تبديل المظهر">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path id="themeIconPath" d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </button>
+    <button class="icon-btn" id="btnOverview" title="نظرة عامة" aria-label="نظرة عامة">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+    </button>
+    <button class="icon-btn" id="btnFullscreen" title="ملء الشاشة (F)" aria-label="ملء الشاشة">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3M16 21h3a2 2 0 0 0 2-2v-3"/></svg>
+    </button>
+  </div>
+</header>
+
+<!-- ============ DECK ============ -->
+<main id="deck" class="deck">
+
+  <!-- ========== SLIDE 0 — HERO ========== -->
+  <section class="slide hero-slide" data-title="المقدمة">
+    <canvas id="heroCanvas" class="hero-canvas"></canvas>
+    <div class="hero-overlay"></div>
+
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span class="pulse-dot"></span>
+        أمن البرمجيات — المحاضرة الثالثة
+      </div>
+
+      <h1 class="hero-title">
+        <span class="grad-text">مبادئ البرمجة الآمنة</span>
+      </h1>
+      <h2 class="hero-subtitle">Secure Programming Principles</h2>
+
+      <div class="hero-meta">
+        <span class="chip">📚 محاضرة نظرية</span>
+        <span class="chip">🗓️ الأسبوع الثالث</span>
+        <span class="chip">🔐 Software Security</span>
+      </div>
+
+      <p class="hero-desc">
+        بناء أنظمة يصعب اختراقها… من أول سطر كود.
+      </p>
+
+      <button class="btn-primary hero-start" id="startBtn">
+        ابدأ المحاضرة
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="arrow-rtl"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+
+    <div class="hero-hint">
+      استخدم <kbd>←</kbd> <kbd>→</kbd> للتنقل، <kbd>F</kbd> لملء الشاشة
+    </div>
+  </section>
+
+  <!-- ========== SLIDE 1 — WHY PRINCIPLES ========== -->
+  <section class="slide" data-title="لماذا نحتاج إلى مبادئ؟">
+    <div class="slide-head">
+      <span class="slide-kicker">الفكرة الأساسية</span>
+      <h2>لماذا نحتاج إلى <span class="grad-text">مبادئ</span>؟</h2>
+    </div>
+
+    <div class="two-col">
+      <div class="col problem">
+        <h3 class="col-title">المشكلة</h3>
+        <div class="vuln-list" id="vulnList">
+          <div class="vuln-chip">ثغرة SQL Injection</div>
+          <div class="vuln-chip">ثغرة XSS</div>
+          <div class="vuln-chip">ثغرة Path Traversal</div>
+          <div class="vuln-chip">ثغرة CSRF</div>
+          <div class="vuln-chip">ثغرة Buffer Overflow</div>
+          <div class="vuln-chip">ثغرة IDOR</div>
+          <div class="vuln-chip">ثغرة SSRF</div>
+          <div class="vuln-chip vuln-more">…+ آلاف الثغرات</div>
+        </div>
+        <p class="col-note">
+          لا يمكن للمبرمج أن يحفظ قائمة بكل الثغرات الممكنة.
+        </p>
+      </div>
+
+      <div class="col solution">
+        <h3 class="col-title">الحل</h3>
+        <div class="principle-pulse">
+          <div class="principle-circle">
+            <span>مبادئ<br><small>عامة</small></span>
+          </div>
+        </div>
+        <p class="big-quote">
+          «تمنع فئات كاملة من الثغرات بدل معالجة ثغرة واحدة فقط.»
+        </p>
+      </div>
+    </div>
+
+    <div class="flow-chain">
+      <span class="flow-node">Threats</span>
+      <span class="flow-arrow">↓</span>
+      <span class="flow-node">Vulnerabilities</span>
+      <span class="flow-arrow">↓</span>
+      <span class="flow-node accent">Security Principles</span>
+      <span class="flow-arrow">↓</span>
+      <span class="flow-node success">Secure Design</span>
+    </div>
+  </section>
+
+  <!-- ========== SLIDE 2 — SALTZER & SCHROEDER ========== -->
+  <section class="slide" data-title="Saltzer & Schroeder">
+    <div class="slide-head">
+      <span class="slide-kicker">1975</span>
+      <h2>مبادئ <span class="grad-text">Saltzer</span> و <span class="grad-text">Schroeder</span></h2>
+    </div>
+
+    <div class="timeline">
+      <div class="timeline-line"></div>
+      <div class="timeline-point year-1975">
+        <div class="tp-year">1975</div>
+        <div class="tp-card">
+          <h4>ورقة بحثية تاريخية</h4>
+          <p class="mono">The Protection of Information in Computer Systems</p>
+          <div class="authors">
+            <div class="author">
+              <span class="author-avatar">JS</span>
+              <span>Jerome Saltzer</span>
+            </div>
+            <div class="author">
+              <span class="author-avatar">MS</span>
+              <span>Michael Schroeder</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="timeline-point year-now">
+        <div class="tp-year">اليوم</div>
+        <div class="tp-card tp-card-now">
+          <h4>الأساس المرجعي</h4>
+          <p>ما تزال المبادئ حجر الأساس في تعليم أمن البرمجيات وهندسة الأنظمة الآمنة.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== SLIDE 3 — 8 PRINCIPLES GRID ========== -->
+  <section class="slide wide" data-title="المبادئ الثمانية">
+    <div class="slide-head">
+      <span class="slide-kicker">Architecture</span>
+      <h2>المبادئ <span class="grad-text">الثمانية</span></h2>
+      <p class="slide-sub">اضغط على أي بطاقة لعرض التفاصيل والأمثلة العملية</p>
+    </div>
+
+    <div class="principles-grid" id="principlesGrid">
+      <!-- filled by JS -->
+    </div>
+  </section>
+
+  <!-- ========== SLIDE 4 — WORK FACTOR + COMPROMISE RECORDING ========== -->
+  <section class="slide" data-title="Work Factor & Compromise Recording">
+    <div class="slide-head">
+      <span class="slide-kicker">مبدآن إضافيان</span>
+      <h2>Work Factor & <span class="grad-text">Compromise Recording</span></h2>
+    </div>
+
+    <div class="two-col two-col-large">
+      <div class="info-card">
+        <div class="info-icon">⚙️</div>
+        <h3>Work Factor</h3>
+        <p class="info-en">مقارنة تكلفة كسر الآلية بموارد المهاجم</p>
+        <div class="workfactor-visual">
+          <div class="wf-bar">
+            <span>تكلفة المهاجم</span>
+            <div class="wf-bar-track"><div class="wf-bar-fill" style="width:35%"></div></div>
+          </div>
+          <div class="wf-bar">
+            <span>تكلفة الحماية</span>
+            <div class="wf-bar-track"><div class="wf-bar-fill success" style="width:75%"></div></div>
+          </div>
+        </div>
+        <p class="info-note">إذا كانت تكلفة الكسر أعلى من قيمة الهدف → الحماية كافية.</p>
+      </div>
+
+      <div class="info-card">
+        <div class="info-icon">📝</div>
+        <h3>Compromise Recording</h3>
+        <p class="info-en">تسجيل الاختراق قد يغني أحيانًا عن منعه</p>
+        <div class="recording-visual">
+          <div class="rec-line">
+            <span class="rec-dot"></span>
+            <span class="mono">[14:02:11] access_granted user=admin</span>
+          </div>
+          <div class="rec-line">
+            <span class="rec-dot"></span>
+            <span class="mono">[14:02:47] file_deleted /etc/config</span>
+          </div>
+          <div class="rec-line">
+            <span class="rec-dot danger"></span>
+            <span class="mono">[14:03:05] unknown_ip=185.x.x.x</span>
+          </div>
+        </div>
+        <p class="info-note">عندما لا يمكن المنع الكامل، يمكن الكشف والاستجابة.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== SLIDE 5 — COMPLETE MEDIATION SCENARIO ========== -->
+  <section class="slide" data-title="الوساطة الكاملة">
+    <div class="slide-head">
+      <span class="slide-kicker">Scenario</span>
+      <h2>لماذا نحتاج إلى <span class="grad-text">الوساطة الكاملة</span>؟</h2>
+      <p class="slide-sub">Complete Mediation — كل وصول يجب أن يمرّ بفحص صلاحيات</p>
+    </div>
+
+    <div class="scenario-wrap">
+      <div class="scenario-window">
+        <div class="win-bar">
+          <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+          <span class="win-title">Admin Dashboard</span>
+        </div>
+        <div class="win-body">
+          <div class="dash-row">
+            <span>👤 Users</span>
+            <button class="dash-btn danger">Delete User</button>
+          </div>
+          <div class="dash-row">
+            <span>📊 Reports</span>
+            <button class="dash-btn">View</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="scenario-toggle">
+        <button class="toggle-btn active" data-mode="bad">السيناريو الخطأ</button>
+        <button class="toggle-btn" data-mode="good">الحل</button>
+      </div>
+
+      <div class="scenario-panel" id="scenarioPanel">
+        <!-- JS injects -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== SLIDE 6 — DEFENSE IN DEPTH ========== -->
+  <section class="slide" data-title="الدفاع المتعدد الطبقات">
+    <div class="slide-head">
+      <span class="slide-kicker">Defense in Depth</span>
+      <h2>الدفاع <span class="grad-text">المتعدد الطبقات</span></h2>
+      <p class="slide-sub">لا تعتمد على ضابط واحد</p>
+    </div>
+
+    <div class="did-wrap">
+      <div class="did-rings" id="didRings">
+        <div class="did-core">
+          <span>Web App</span>
+        </div>
+        <!-- rings injected by JS -->
+      </div>
+      <div class="did-legend" id="didLegend">
+        <!-- legend injected -->
+      </div>
+    </div>
+
+    <div class="did-quote">
+      «إذا فشلت طبقة، الطبقة التالية تمنع الهجوم.»
+    </div>
+  </section>
+
+  <!-- ========== SLIDE 7 — ATTACK SURFACE REDUCTION ========== -->
+  <section class="slide" data-title="تقليص سطح الهجوم">
+    <div class="slide-head">
+      <span class="slide-kicker">Attack Surface</span>
+      <h2>تقليص <span class="grad-text">سطح الهجوم</span></h2>
+    </div>
+
+    <div class="asr-wrap">
+      <div class="asr-canvas" id="asrCanvas">
+        <div class="asr-server">
+          <svg viewBox="0 0 24 24" width="44" height="44" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="6" rx="1.5"/><rect x="3" y="14" width="18" height="6" rx="1.5"/><circle cx="7" cy="7" r="1"/><circle cx="7" cy="17" r="1"/></svg>
+          <span>Server</span>
+        </div>
+        <!-- endpoints injected -->
+      </div>
+
+      <div class="asr-actions">
+        <button class="btn-primary" id="asrReduce">تقليص سطح الهجوم</button>
+        <button class="btn-ghost" id="asrReset">إعادة</button>
+      </div>
+    </div>
+
+    <p class="asr-note">
+      كل واجهة أو خاصية أو منفذ إضافي = فرصة إضافية للمهاجم
+    </p>
+  </section>
+
+  <!-- ========== SLIDE 8 — SECURE BY DEFAULT ========== -->
+  <section class="slide" data-title="الآمن افتراضيًا">
+    <div class="slide-head">
+      <span class="slide-kicker">Secure by Default</span>
+      <h2>الآمن <span class="grad-text">افتراضيًا</span></h2>
+    </div>
+
+    <div class="sbd-compare">
+      <div class="sbd-side bad-side">
+        <div class="sbd-head">
+          <span class="badge-x">✗</span>
+          <h3>Insecure Default</h3>
+        </div>
+        <ul class="sbd-list">
+          <li><code>Debug = ON</code></li>
+          <li><code>Encryption = OFF</code></li>
+          <li><code>Default Password = "admin"</code></li>
+          <li><code>Public Admin Panel</code></li>
+        </ul>
+      </div>
+
+      <div class="sbd-arrow">
+        <svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      </div>
+
+      <div class="sbd-side good-side">
+        <div class="sbd-head">
+          <span class="badge-check">✓</span>
+          <h3>Secure by Default</h3>
+        </div>
+        <ul class="sbd-list">
+          <li><code>Debug = OFF</code></li>
+          <li><code>Encryption = ON</code></li>
+          <li><code>No Default Password</code></li>
+          <li><code>Admin Access Restricted</code></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== SLIDE 9 — INPUT VALIDATION ========== -->
+  <section class="slide" data-title="التحقق من المدخلات">
+    <div class="slide-head">
+      <span class="slide-kicker">Input Validation</span>
+      <h2>التحقق من <span class="grad-text">المدخلات</span></h2>
+      <p class="slide-sub">جرّب إدخال قيم مختلفة في الحقل التالي</p>
+    </div>
+
+    <div class="input-demo">
+      <label for="demoInput" class="demo-label">Username</label>
+      <div class="demo-input-wrap">
+        <input type="text" id="demoInput" placeholder="اكتب اسم المستخدم…" autocomplete="off" />
+        <span class="demo-status" id="demoStatus"></span>
+      </div>
+
+      <div class="demo-samples">
+        <span class="demo-sample" data-value="Abdo">Abdo</span>
+        <span class="demo-sample" data-value="admin<script>">admin&lt;script&gt;</span>
+        <span class="demo-sample" data-value="abdo_123">abdo_123</span>
+      </div>
+
+      <div class="allowlist-badge">
+        <span class="mono">Pattern: [a-zA-Z0-9_]{3,20}</span>
+        <span class="label">Allowlist Validation</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== SLIDE 10 — ALLOWLIST VS DENYLIST ========== -->
+  <section class="slide" data-title="Allowlist vs Denylist">
+    <div class="slide-head">
+      <span class="slide-kicker">Comparison</span>
+      <h2>Allowlist <span class="vs">vs</span> Denylist</h2>
+    </div>
+
+    <div class="two-col">
+      <div class="col deny-col">
+        <h3 class="col-title">
+          <span class="badge-x small">✗</span> Denylist
+        </h3>
+        <p class="col-sub">«امنع ما أعرفه»</p>
+        <pre class="code-block"><code class="language-python">if "script" in input:
+    reject()
+# Bypass: &lt;SCRIPT&gt;, &lt;img src=x onerror=...&gt;</code></pre>
+        <p class="col-note">يمكن تجاوزها بصيغة غير متوقعة.</p>
+      </div>
+
+      <div class="col allow-col">
+        <h3 class="col-title">
+          <span class="badge-check small">✓</span> Allowlist
+        </h3>
+        <p class="col-sub">«اسمح فقط بما أعرف أنه صحيح»</p>
+        <pre class="code-block"><code class="language-python">import re
+if not re.fullmatch(r"[a-z0-9_]{3,20}", input):
+    reject()
+# فقط النمط المعروف يُقبل</code></pre>
+        <p class="col-note highlight">الأسلوب المفضل: Allowlist</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== SLIDE 11 — 4 VALIDATION RULES ========== -->
+  <section class="slide wide" data-title="قواعد التحقق الأربعة">
+    <div class="slide-head">
+      <span class="slide-kicker">Pipeline</span>
+      <h2>قواعد <span class="grad-text">التحقق الأربعة</span></h2>
+    </div>
+
+    <div class="rules-grid">
+      <div class="rule-card">
+        <div class="rule-num">01</div>
+        <h3>Server-side Validation</h3>
+        <p class="rule-en">التحقق في الخادم دائمًا</p>
+        <p class="rule-note">لا تعتمد على التحقق في المتصفح فقط.</p>
+      </div>
+      <div class="rule-card">
+        <div class="rule-num">02</div>
+        <h3>Syntactic Validation</h3>
+        <p class="rule-en">هل الشكل صحيح؟</p>
+        <p class="rule-note">النوع • الطول • النمط</p>
+      </div>
+      <div class="rule-card">
+        <div class="rule-num">03</div>
+        <h3>Semantic Validation</h3>
+        <p class="rule-en">هل القيمة منطقية؟</p>
+        <p class="rule-note">مثال: تاريخ البداية &lt; تاريخ النهاية</p>
+      </div>
+      <div class="rule-card">
+        <div class="rule-num">04</div>
+        <h3>Canonicalization</h3>
+        <p class="rule-en">توحيد المدخل قبل التحقق</p>
+        <p class="rule-note">UTF-8 normalize • Case-fold • Decode</p>
+      </div>
+    </div>
+
+    <div class="pipeline">
+      <span class="pipe-node">Input</span>
+      <span class="pipe-arrow">↓</span>
+      <span class="pipe-node">Canonicalize</span>
+      <span class="pipe-arrow">↓</span>
+      <span class="pipe-node">Syntactic</span>
+      <span class="pipe-arrow">↓</span>
+      <span class="pipe-node">Semantic</span>
+      <span class="pipe-arrow">↓</span>
+      <span class="pipe-node success">Accept / Reject</span>
+    </div>
+  </section>
+
+  <!-- ========== SLIDE 12 — INPUT ≠ OUTPUT ========== -->
+  <section class="slide" data-title="Input Validation ≠ Output Encoding">
+    <div class="slide-head">
+      <span class="slide-kicker">Important Distinction</span>
+      <h2>التحقق من المدخلات <span class="neq">≠</span> ترميز المخرجات</h2>
+    </div>
+
+    <div class="flow-horizontal">
+      <div class="fh-node">User Input</div>
+      <div class="fh-arrow">→</div>
+      <div class="fh-node accent">Input Validation</div>
+      <div class="fh-arrow">→</div>
+      <div class="fh-node">Application</div>
+      <div class="fh-arrow">→</div>
+      <div class="fh-targets">
+        <div class="fh-target">HTML</div>
+        <div class="fh-target">SQL</div>
+        <div class="fh-target">Command</div>
+      </div>
+    </div>
+
+    <div class="encoding-callout">
+      <div class="callout-icon">🛡️</div>
+      <div>
+        <h4>Output Encoding</h4>
+        <p>عند وصول البيانات إلى وجهتها (HTML / SQL / Command) يجب ترميزها بما يناسب سياقها — حتى لو كانت مدخلات صحيحة.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== SLIDE 13 — SECURE ERROR HANDLING ========== -->
+  <section class="slide" data-title="الفشل الآمن">
+    <div class="slide-head">
+      <span class="slide-kicker">Secure Error Handling</span>
+      <h2>الفشل <span class="grad-text">الآمن</span></h2>
+    </div>
+
+    <div class="two-col">
+      <div class="col error-bad">
+        <div class="err-head"><span class="badge-x small">✗</span> Bad</div>
+        <pre class="code-block code-error"><code>Database Error:
+SELECT * FROM users
+WHERE password = '...'
+
+File: /var/www/app/database.py
+Line 128
+Stack trace...</code></pre>
+      </div>
+
+      <div class="col error-good">
+        <div class="err-head"><span class="badge-check small">✓</span> Secure</div>
+        <div class="secure-error">
+          <p class="secure-msg">حدث خطأ أثناء تنفيذ العملية.</p>
+          <p class="incident-id">Incident ID: <span class="mono">A7F29C1D</span></p>
+        </div>
+        <div class="internal-log">
+          <div class="log-head">Internal Log <span class="log-tag">للمطور فقط</span></div>
+          <pre class="log-body">2024-11-14 14:02:11 ERROR db
+  Query: SELECT * FROM users...
+  File: /var/www/app/database.py:128
+  Incident: A7F29C1D</pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== SLIDE 14 — FAIL OPEN VS FAIL SECURE ========== -->
+  <section class="slide" data-title="Fail Open vs Fail Secure">
+    <div class="slide-head">
+      <span class="slide-kicker">Error Semantics</span>
+      <h2>Fail Open <span class="vs">vs</span> Fail Secure</h2>
+    </div>
+
+    <div class="fofs-wrap">
+      <div class="fofs-side fofs-bad">
+        <div class="fofs-title">FAIL OPEN</div>
+        <div class="fofs-flow">
+          <span class="fofs-node">Error</span>
+          <span class="fofs-arrow">↓</span>
+          <span class="fofs-node danger">Access Granted ✗</span>
+        </div>
+        <pre class="code-block small"><code class="language-python">except Exception:
+    return True</code></pre>
+      </div>
+
+      <div class="fofs-side fofs-good">
+        <div class="fofs-title">FAIL SECURE</div>
+        <div class="fofs-flow">
+          <span class="fofs-node">Error</span>
+          <span class="fofs-arrow">↓</span>
+          <span class="fofs-node success">Access Denied ✓</span>
+        </div>
+        <pre class="code-block small"><code class="language-python">except DatabaseError:
+    log_incident()
+    return False</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== SLIDE 15 — LOGGING ========== -->
+  <section class="slide" data-title="تسجيل الأحداث">
+    <div class="slide-head">
+      <span class="slide-kicker">Logging</span>
+      <h2>تسجيل <span class="grad-text">الأحداث</span></h2>
+    </div>
+
+    <div class="log-dash">
+      <div class="log-panel log-do">
+        <h3><span class="badge-check small">✓</span> يُسجّل</h3>
+        <ul>
+          <li>Successful login</li>
+          <li>Failed login</li>
+          <li>Access denied</li>
+          <li>Permission changes</li>
+          <li>Repeated validation failures</li>
+          <li>Time / User / Source</li>
+        </ul>
+      </div>
+
+      <div class="log-panel log-dont">
+        <h3><span class="badge-x small">✗</span> لا يُسجّل</h3>
+        <ul>
+          <li>Passwords</li>
+          <li>Session tokens</li>
+          <li>Card numbers</li>
+          <li>Sensitive personal data</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== SLIDE 16 — PASSWORD STORAGE ========== -->
+  <section class="slide" data-title="تخزين كلمات المرور">
+    <div class="slide-head">
+      <span class="slide-kicker">Password Storage</span>
+      <h2>كيف نخزن <span class="grad-text">كلمات المرور</span> بأمان؟</h2>
+    </div>
+
+    <div class="pw-flow">
+      <div class="pw-step">
+        <div class="pw-icon">🔑</div>
+        <div class="pw-label">Password</div>
+      </div>
+      <div class="pw-arrow">↓</div>
+      <div class="pw-step">
+        <div class="pw-icon">#️⃣</div>
+        <div class="pw-label">Hash Function</div>
+        <div class="pw-sub">+ Random Salt</div>
+      </div>
+      <div class="pw-arrow">↓</div>
+      <div class="pw-step">
+        <div class="pw-icon">🐢</div>
+        <div class="pw-label">Slow Password Hash</div>
+        <div class="pw-sub">Argon2id • bcrypt</div>
+      </div>
+      <div class="pw-arrow">↓</div>
+      <div class="pw-step">
+        <div class="pw-icon">💾</div>
+        <div class="pw-label">Database</div>
+      </div>
+    </div>
+
+    <div class="pw-warnings">
+      <div class="warn-item">❌ لا تخزن Password Plaintext</div>
+      <div class="warn-item">❌ لا تستخدم Encryption قابل للعكس</div>
+      <div class="warn-item good">✓ استخدم Slow Hash + Salt</div>
+    </div>
+  </section>
+
+  <!-- ========== SLIDE 17 — SALT ========== -->
+  <section class="slide" data-title="Salt">
+    <div class="slide-head">
+      <span class="slide-kicker">Salt</span>
+      <h2>لماذا نحتاج إلى <span class="grad-text">Salt</span>؟</h2>
+    </div>
+
+    <div class="salt-compare">
+      <div class="salt-side">
+        <h4>بدون Salt</h4>
+        <div class="salt-row">
+          <span class="mono salt-pw">password123</span>
+          <span class="salt-arrow">→</span>
+          <span class="mono salt-hash">5f4dcc3b…</span>
+        </div>
+        <div class="salt-row">
+          <span class="mono salt-pw">password123</span>
+          <span class="salt-arrow">→</span>
+          <span class="mono salt-hash danger">5f4dcc3b…</span>
+        </div>
+        <p class="salt-note danger">نفس الـHash → كشف جماعي</p>
+      </div>
+
+      <div class="salt-side salt-good">
+        <h4>مع Salt</h4>
+        <div class="salt-row">
+          <span class="mono salt-pw">password123 + S₁</span>
+          <span class="salt-arrow">→</span>
+          <span class="mono salt-hash success">a91c2f…</span>
+        </div>
+        <div class="salt-row">
+          <span class="mono salt-pw">password123 + S₂</span>
+          <span class="salt-arrow">→</span>
+          <span class="mono salt-hash success">b7e4d1…</span>
+        </div>
+        <p class="salt-note success">تجزئات مختلفة لنفس الكلمة</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== SLIDE 18 — PASSWORD ALGOS ========== -->
+  <section class="slide" data-title="خوارزميات التخزين">
+    <div class="slide-head">
+      <span class="slide-kicker">Ranking</span>
+      <h2>خوارزميات <span class="grad-text">تخزين كلمات المرور</span></h2>
+    </div>
+
+    <div class="algo-rank">
+      <div class="algo-row algo-top">
+        <span class="algo-medal">🥇</span>
+        <span class="algo-name">Argon2id</span>
+        <span class="algo-tag success">Recommended</span>
+      </div>
+      <div class="algo-row algo-second">
+        <span class="algo-medal">🥈</span>
+        <span class="algo-name">scrypt / bcrypt</span>
+        <span class="algo-tag success">Recommended</span>
+      </div>
+      <div class="algo-row algo-ok">
+        <span class="algo-medal">🥉</span>
+        <span class="algo-name">PBKDF2</span>
+        <span class="algo-tag warn">عند متطلبات معيارية</span>
+      </div>
+    </div>
+
+    <div class="algo-warning">
+      <span class="warn-badge">Not suitable alone</span>
+      <div class="algo-bad-list">
+        <code>MD5</code>
+        <code>SHA-1</code>
+        <code>SHA-256</code>
+      </div>
+      <p>دوال تجزئة عامة سريعة — غير مناسبة وحدها لتخزين كلمات المرور.</p>
+    </div>
+  </section>
+
+  <!-- ========== SLIDE 19 — SECRETS ========== -->
+  <section class="slide" data-title="إدارة الأسرار">
+    <div class="slide-head">
+      <span class="slide-kicker">Secrets Management</span>
+      <h2>إدارة <span class="grad-text">الأسرار</span></h2>
+    </div>
+
+    <div class="git-demo">
+      <div class="git-window">
+        <div class="win-bar">
+          <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+          <span class="win-title">config.py — git</span>
+        </div>
+        <pre class="code-block git-code" id="gitCode"><code><span class="git-added" id="lineBad">DB_PASSWORD = "Admin@2024"</span></code></pre>
+      </div>
+
+      <div class="leak-alert" id="leakAlert">
+        <span class="leak-icon">⚠</span>
+        <span>SECRET LEAKED</span>
+      </div>
+
+      <button class="btn-primary" id="secretsFix">أصلح الكود</button>
+
+      <div class="secrets-rules">
+        <div class="rule-item">• لا تكتب الأسرار داخل الكود.</div>
+        <div class="rule-item">• لا ترفع ملفات الإعداد التي تحتوي أسرارًا إلى Git.</div>
+        <div class="rule-item">• أقل صلاحية ممكنة.</div>
+        <div class="rule-item">• غيّر السر دوريًا وفور الاشتباه بتسربه.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== SLIDE 20 — THREAT MODELING INTRO ========== -->
+  <section class="slide" data-title="نمذجة التهديدات">
+    <div class="slide-head">
+      <span class="slide-kicker">Transition</span>
+      <h2>من Secure Coding إلى <span class="grad-text">Secure Design</span></h2>
+    </div>
+
+    <div class="tm-intro">
+      <div class="tm-transition">
+        <span class="tm-node">Secure Coding</span>
+        <span class="tm-arrow">→</span>
+        <span class="tm-node accent">Secure Design</span>
+      </div>
+
+      <h3 class="tm-question">«ما الذي قد يسوء في هذا النظام؟»</h3>
+
+      <p class="tm-note">
+        نمذجة التهديدات <span class="tm-en">(Threat Modeling)</span>
+        تُنفَّذ في <strong>مرحلة التصميم</strong> قبل كتابة الكود.
+      </p>
+    </div>
+  </section>
+
+  <!-- ========== SLIDE 21 — FOUR QUESTIONS ========== -->
+  <section class="slide" data-title="الأسئلة الأربعة">
+    <div class="slide-head">
+      <span class="slide-kicker">Four Questions</span>
+      <h2>الأسئلة <span class="grad-text">الأربعة</span> لنمذجة التهديدات</h2>
+    </div>
+
+    <div class="fourq-grid">
+      <div class="fourq-card" style="--i:1">
+        <div class="fourq-num">1</div>
+        <h4>ما الذي نبنيه؟</h4>
+        <p>فهم النظام والمكونات والتدفقات</p>
+      </div>
+      <div class="fourq-card" style="--i:2">
+        <div class="fourq-num">2</div>
+        <h4>ما الذي قد يسوء؟</h4>
+        <p>تحديد التهديدات المحتملة</p>
+      </div>
+      <div class="fourq-card" style="--i:3">
+        <div class="fourq-num">3</div>
+        <h4>ماذا سنفعل حياله؟</h4>
+        <p>تحديد الضوابط الأمنية</p>
+      </div>
+      <div class="fourq-card" style="--i:4">
+        <div class="fourq-num">4</div>
+        <h4>هل قمنا بعمل جيد؟</h4>
+        <p>مراجعة وتحقق من التغطية</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== SLIDE 22 — STRIDE ========== -->
+  <section class="slide wide" data-title="STRIDE">
+    <div class="slide-head">
+      <span class="slide-kicker">Framework</span>
+      <h2><span class="grad-text">STRIDE</span> — تصنيف التهديدات</h2>
+      <p class="slide-sub">اضغط على أي بطاقة لعرض التفاصيل</p>
+    </div>
+
+    <div class="stride-grid" id="strideGrid">
+      <!-- filled by JS -->
+    </div>
+  </section>
+
+  <!-- ========== SLIDE 23 — STRIDE EXAMPLE ========== -->
+  <section class="slide wide" data-title="مثال STRIDE">
+    <div class="slide-head">
+      <span class="slide-kicker">Example</span>
+      <h2>مثال: نظام <span class="grad-text">تسجيل الطلبة</span> في المقررات</h2>
+    </div>
+
+    <div class="stride-arch">
+      <div class="arch-col">
+        <div class="arch-node">Student</div>
+        <div class="arch-arrow">↓</div>
+        <div class="arch-node">Web Application</div>
+        <div class="arch-arrow">↓</div>
+        <div class="arch-node">Server</div>
+        <div class="arch-arrow">↓</div>
+        <div class="arch-node accent">Database</div>
+      </div>
+
+      <div class="threat-list" id="threatList">
+        <!-- filled by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== SLIDE 24 — OWASP MAPPING ========== -->
+  <section class="slide wide" data-title="ربط OWASP Top 10">
+    <div class="slide-head">
+      <span class="slide-kicker">Mapping</span>
+      <h2>ربط المبادئ بـ <span class="grad-text">OWASP Top 10</span></h2>
+      <p class="slide-sub">مرّر الماوس فوق أي فئة لعرض المبادئ المرتبطة</p>
+    </div>
+
+    <div class="owasp-matrix" id="owaspMatrix">
+      <!-- filled by JS -->
+    </div>
+  </section>
+
+  <!-- ========== SLIDE 25 — SUMMARY MIND MAP ========== -->
+  <section class="slide wide" data-title="الملخص">
+    <div class="slide-head">
+      <span class="slide-kicker">Summary</span>
+      <h2><span class="grad-text">Mind Map</span> — خريطة المفاهيم</h2>
+    </div>
+
+    <div class="mindmap">
+      <div class="mind-center">
+        <span>Secure<br>Programming</span>
+      </div>
+      <div class="mind-branches">
+        <div class="mind-branch">Secure Design</div>
+        <div class="mind-branch">Input Validation</div>
+        <div class="mind-branch">Error Handling</div>
+        <div class="mind-branch">Password Security</div>
+        <div class="mind-branch">Secrets</div>
+        <div class="mind-branch">Threat Modeling</div>
+        <div class="mind-branch">STRIDE</div>
+        <div class="mind-branch">Defense in Depth</div>
+      </div>
+    </div>
+
+    <div class="mind-quote">
+      «المبادئ العامة تمنع فئات كاملة من الثغرات، وليس ثغرة واحدة فقط.»
+    </div>
+  </section>
+
+  <!-- ========== SLIDE 26 — QUIZ ========== -->
+  <section class="slide" data-title="اختبار سريع">
+    <div class="slide-head">
+      <span class="slide-kicker">Interactive Quiz</span>
+      <h2>اختبار <span class="grad-text">سريع</span></h2>
+    </div>
+
+    <div class="quiz-wrap" id="quizWrap">
+      <div class="quiz-progress">
+        <div class="quiz-progress-fill" id="quizProgressFill"></div>
+      </div>
+      <div class="quiz-counter" id="quizCounter">1 / 8</div>
+
+      <div class="quiz-body" id="quizBody">
+        <!-- filled -->
+      </div>
+
+      <div class="quiz-result" id="quizResult" hidden>
+        <div class="result-circle">
+          <svg viewBox="0 0 120 120">
+            <circle cx="60" cy="60" r="52" class="result-ring-bg"/>
+            <circle cx="60" cy="60" r="52" class="result-ring-fg" id="resultRing"/>
+          </svg>
+          <div class="result-score" id="resultScore">0%</div>
+        </div>
+        <p class="result-msg" id="resultMsg"></p>
+        <button class="btn-ghost" id="quizRestart">أعد الاختبار</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== SLIDE 27 — GLOSSARY ========== -->
+  <section class="slide wide" data-title="المصطلحات">
+    <div class="slide-head">
+      <span class="slide-kicker">Glossary</span>
+      <h2>قاموس <span class="grad-text">المصطلحات</span></h2>
+      <div class="glossary-search">
+        <input type="text" id="glossarySearch" placeholder="ابحث عن مصطلح…" />
+      </div>
+    </div>
+
+    <div class="glossary-grid" id="glossaryGrid">
+      <!-- filled by JS -->
+    </div>
+  </section>
+
+  <!-- ========== SLIDE 28 — REFERENCES ========== -->
+  <section class="slide" data-title="المراجع">
+    <div class="slide-head">
+      <span class="slide-kicker">References</span>
+      <h2>المصادر <span class="grad-text">والمراجع</span></h2>
+    </div>
+
+    <div class="refs-list">
+      <a class="ref-item" href="https://web.mit.edu/Saltzer/www/publications/protection/" target="_blank" rel="noopener">
+        <span class="ref-num">01</span>
+        <div>
+          <h4>Saltzer & Schroeder (1975)</h4>
+          <p class="mono">The Protection of Information in Computer Systems</p>
+        </div>
+      </a>
+      <a class="ref-item" href="https://www.swquality.com/" target="_blank" rel="noopener">
+        <span class="ref-num">02</span>
+        <div>
+          <h4>McGraw (2006)</h4>
+          <p class="mono">Software Security: Building Security In</p>
+        </div>
+      </a>
+      <a class="ref-item" href="https://threatmodelingbook.com/" target="_blank" rel="noopener">
+        <span class="ref-num">03</span>
+        <div>
+          <h4>Shostack (2014)</h4>
+          <p class="mono">Threat Modeling: Designing for Security</p>
+        </div>
+      </a>
+      <a class="ref-item" href="https://cheatsheetseries.owasp.org/" target="_blank" rel="noopener">
+        <span class="ref-num">04</span>
+        <div>
+          <h4>OWASP Cheat Sheet Series</h4>
+          <p class="mono">cheatsheetseries.owasp.org</p>
+        </div>
+      </a>
+      <a class="ref-item" href="https://cwe.mitre.org/data/definitions/798.html" target="_blank" rel="noopener">
+        <span class="ref-num">05</span>
+        <div>
+          <h4>MITRE CWE-798</h4>
+          <p class="mono">Use of Hard-coded Credentials</p>
+        </div>
+      </a>
+    </div>
+
+    <div class="end-note">
+      <p>🎓 نهاية المحاضرة — أمن البرمجيات | المحاضرة الثالثة</p>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============ BOTTOM CONTROLS ============ -->
+<footer id="controls" class="controls">
+  <button class="ctrl-btn" id="btnPrev" aria-label="السابق">
+    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l7-7-7-7"/></svg>
+    <span>السابق</span>
+  </button>
+
+  <div class="ctrl-center">
+    <div class="ctrl-progress">
+      <div class="ctrl-progress-fill" id="ctrlProgressFill"></div>
+    </div>
+    <div class="ctrl-counter">
+      <span id="ctrlCurrent">01</span>
+      <span class="ctrl-sep">/</span>
+      <span id="ctrlTotal">29</span>
+    </div>
+  </div>
+
+  <button class="ctrl-btn" id="btnNext" aria-label="التالي">
+    <span>التالي</span>
+    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="arrow-rtl"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+  </button>
+</footer>
+
+<!-- ============ OVERVIEW ============ -->
+<div id="overview" class="overview" hidden>
+  <div class="overview-head">
+    <h3>نظرة عامة على الشرائح</h3>
+    <button class="icon-btn" id="closeOverview" aria-label="إغلاق">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+  <div class="overview-grid" id="overviewGrid"></div>
+</div>
+
+<!-- ============ MODAL (Principle/STRIDE detail) ============ -->
+<div id="modal" class="modal" hidden>
+  <div class="modal-backdrop" data-close></div>
+  <div class="modal-card">
+    <button class="icon-btn modal-close" data-close aria-label="إغلاق">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </button>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="js/app.js"></script>
+<script src="js/slides.js"></script>
+<script src="js/navigation.js"></script>
+<script src="js/animations.js"></script>
+<script src="js/quiz.js"></script>
+</body>
+</html>
